@@ -249,8 +249,8 @@ const REFERENCES = ['skinfit international', 'lieblingsglas', 'everdrop', 'jonny
 const PRIVACY = [
   {
     q: { en: 'who is responsible', de: 'wer ist verantwortlich' },
-    a: { en: 'the controller for data processing on this site is Linda Hiller, undressed.socials, [ address ], Dornbirn, Austria — linda@undressedsocials.com. reach us any time with privacy questions.',
-         de: 'verantwortlich für die Datenverarbeitung auf dieser Seite ist Linda Hiller, undressed.socials, [ Adresse ], Dornbirn, Österreich — linda@undressedsocials.com. melde dich jederzeit mit Datenschutzfragen.' },
+    a: { en: 'the controller for data processing on this site is Linda Hiller, undressed.socials, Schulgasse 58, 6850 Dornbirn, Austria — linda@undressedsocials.com. reach us any time with privacy questions.',
+         de: 'verantwortlich für die Datenverarbeitung auf dieser Seite ist Linda Hiller, undressed.socials, Schulgasse 58, 6850 Dornbirn, Österreich — linda@undressedsocials.com. melde dich jederzeit mit Datenschutzfragen.' },
   },
   {
     q: { en: 'what we collect', de: 'welche Daten wir erheben' },

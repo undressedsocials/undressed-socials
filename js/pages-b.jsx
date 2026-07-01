@@ -284,7 +284,7 @@ function ImprintPage({ nav }) {
   const blocks = [
   {
     label: { en: 'media owner & publisher', de: 'Medieninhaberin & Herausgeberin' },
-    lines: ['Linda Hiller', 'undressed.socials', '[ Straße + Nr. ]', '6850 Dornbirn, Austria']
+    lines: ['Linda Hiller', 'undressed.socials', 'Schulgasse 58', '6850 Dornbirn, Austria']
   },
   {
     label: { en: 'contact', de: 'Kontakt' },
@@ -292,11 +292,16 @@ function ImprintPage({ nav }) {
   },
   {
     label: { en: 'business details', de: 'Unternehmensdaten' },
-    lines: ['[ Einzelunternehmen ]', 'UID: [ ATU… ]', 'GLN / Firmenbuch: [ … ]', 'Gewerbe: Werbeagentur']
+    lines: [
+      t({ en: 'sole proprietorship (Einzelunternehmen)', de: 'Einzelunternehmen' }),
+      t({ en: 'trade: advertising agency', de: 'Gewerbe: Werbeagentur' })]
   },
   {
     label: { en: 'authority & chamber', de: 'Behörde & Kammer' },
-    lines: ['[ Bezirkshauptmannschaft Dornbirn ]', 'WKO Vorarlberg', 'Mitglied der Wirtschaftskammer Österreich']
+    lines: [
+      t({ en: 'trade authority: District Authority Dornbirn', de: 'Gewerbebehörde: Bezirkshauptmannschaft Dornbirn' }),
+      t({ en: 'member of the Austrian Chamber of Commerce (WKO Vorarlberg)', de: 'Mitglied der Wirtschaftskammer Österreich (WKO Vorarlberg)' }),
+      t({ en: 'trade regulations: Gewerbeordnung (ris.bka.gv.at)', de: 'gewerberechtliche Vorschriften: Gewerbeordnung (ris.bka.gv.at)' })]
   }];
 
   return (
@@ -347,8 +352,8 @@ function ImprintPage({ nav }) {
         <Reveal delay={60} style={{ display: 'block', marginTop: 'var(--gap-5)' }}>
           <p className="lead" style={{ opacity: .8, fontStyle: 'italic' }}>
             {t({
-              en: '[ placeholder copy — have this reviewed by your data-protection contact and fill the bracketed details before launch. ]',
-              de: '[ Platzhalter — bitte vor dem Launch von deiner Datenschutz-Ansprechperson prüfen lassen und die [ … ]-Angaben ausfüllen. ]'
+              en: 'last updated: July 2026.',
+              de: 'Stand: Juli 2026.'
             })}
           </p>
         </Reveal>
