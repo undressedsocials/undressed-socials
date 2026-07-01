@@ -218,9 +218,43 @@ function AboutPage({ nav }) {
 }
 
 /* ---------------- LET'S TALK (contact + form) ---------------- */
+/* form backend: FormSubmit.co AJAX endpoint. The path segment is the activated
+   random alias for linda@undressedsocials.com (keeps the address out of the
+   markup so scrapers can't harvest it). Activated 2026-07-01. */
+const FORM_ENDPOINT = 'https://formsubmit.co/ajax/5af2da801006622209cb1915c35794da';
+
 function ContactPage() {
   const t = useT();
   const [sent, setSent] = usePB(false);
+  const [sending, setSending] = usePB(false);
+  const [error, setError] = usePB(false);
+
+  const onSubmit = (e) => {
+    e.preventDefault();
+    if (sending) return;
+    const f = e.target;
+    if (f._honey && f._honey.value) return; // bot filled the honeypot — drop silently
+    setSending(true);
+    setError(false);
+    fetch(FORM_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({
+        brand: f.brand.value,
+        email: f.email.value,
+        message: f.message.value,
+        _subject: 'undressedsocials.com — neue Anfrage von ' + f.brand.value,
+        _template: 'table',
+      }),
+    }).
+    then((r) => r.json()).
+    then((d) => {
+      if (d.success === 'true' || d.success === true) setSent(true);else
+      throw new Error(d.message || 'send failed');
+    }).
+    catch(() => setError(true)).
+    finally(() => setSending(false));
+  };
   return (
     <main className="band contact">
       <div className="wrap">
@@ -258,13 +292,26 @@ function ContactPage() {
         {/* the form */}
         <Reveal delay={160} className="contact-form-wrap">
           {!sent ?
-          <form onSubmit={(e) => {e.preventDefault();setSent(true);}}>
+          <form onSubmit={onSubmit}>
               <div className="field-row">
-                <div className="field"><label>{t(UI.formBrand)}</label><input required placeholder={t({ en: 'brand name', de: 'Markenname' })} /></div>
-                <div className="field"><label>{t(UI.formEmail)}</label><input required type="email" placeholder="you@brand.com" /></div>
+                <div className="field"><label>{t(UI.formBrand)}</label><input name="brand" required placeholder={t({ en: 'brand name', de: 'Markenname' })} /></div>
+                <div className="field"><label>{t(UI.formEmail)}</label><input name="email" required type="email" placeholder="you@brand.com" /></div>
               </div>
-              <div className="field"><label>{t(UI.formMsg)}</label><textarea rows="3" placeholder={t(UI.formMsgPh)}></textarea></div>
-              <Button solid type="submit" data-magnetic>{UI.send}</Button>
+              <div className="field"><label>{t(UI.formMsg)}</label><textarea name="message" rows="3" placeholder={t(UI.formMsgPh)}></textarea></div>
+              {/* honeypot — invisible to humans, bots fill it and get dropped */}
+              <input type="text" name="_honey" tabIndex="-1" autoComplete="off" aria-hidden="true"
+              style={{ position: 'absolute', left: '-9999px', width: 1, height: 1, opacity: 0 }} />
+              <Button solid type="submit" data-magnetic disabled={sending}>
+                {sending ? t({ en: 'sending…', de: 'wird gesendet…' }) : UI.send}
+              </Button>
+              {error &&
+            <p className="lead" role="alert" style={{ marginTop: 12 }}>
+                  {t({
+                en: <>hm, that didn&rsquo;t go through. try again — or email us directly at <a href="mailto:linda@undressedsocials.com">linda@undressedsocials.com</a>.</>,
+                de: <>hm, das hat nicht geklappt. versuch&rsquo;s nochmal — oder schreib uns direkt an <a href="mailto:linda@undressedsocials.com">linda@undressedsocials.com</a>.</>
+              })}
+                </p>
+            }
             </form> :
 
           <div className="sent">

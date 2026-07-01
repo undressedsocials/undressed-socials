@@ -254,8 +254,8 @@ const PRIVACY = [
   },
   {
     q: { en: 'what we collect', de: 'welche Daten wir erheben' },
-    a: { en: 'contact form & email: the brand name, email address and message you send us. server log files: your provider, browser, time of access and IP (collected automatically by the host). we use no tracking pixels and no advertising cookies.',
-         de: 'Kontaktformular & E-Mail: der Markenname, die E-Mail-Adresse und die Nachricht, die du uns sendest. Server-Logfiles: dein Provider, Browser, Zugriffszeit und IP (automatisch vom Hoster erfasst). wir setzen keine Tracking-Pixel und keine Werbe-Cookies.' },
+    a: { en: 'contact form & email: the brand name, email address and message you send us. form submissions are relayed to our inbox by FormSubmit (formsubmit.co, Devro LABS); the data is used only for delivery and is not used by the provider for its own purposes. server log files: your provider, browser, time of access and IP (collected automatically by the host). we use no tracking pixels and no advertising cookies.',
+         de: 'Kontaktformular & E-Mail: der Markenname, die E-Mail-Adresse und die Nachricht, die du uns sendest. Formular-Anfragen werden über den Dienst FormSubmit (formsubmit.co, Devro LABS) an unser Postfach zugestellt; die Daten werden dort nur zur Übermittlung verwendet und nicht für eigene Zwecke des Anbieters genutzt. Server-Logfiles: dein Provider, Browser, Zugriffszeit und IP (automatisch vom Hoster erfasst). wir setzen keine Tracking-Pixel und keine Werbe-Cookies.' },
   },
   {
     q: { en: 'purpose & legal basis', de: 'Zweck & Rechtsgrundlage' },
