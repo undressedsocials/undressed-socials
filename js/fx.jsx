@@ -26,7 +26,7 @@ function Plate({ tag = '', label = 'image', ratio = '4 / 3', src, parallax, nowi
     style={{ aspectRatio: ratio, ...style }}
     data-parallax={parallax}>
       {src ?
-      <img src={src} alt={label} /> :
+      <img src={src} alt={label} loading="lazy" decoding="async" /> :
       <div className="plate-mid"><span className="label-caps">{label}</span></div>}
       {tag && <span className="plate-tag">{tag}</span>}
     </div>);
@@ -258,7 +258,7 @@ function ZoomReveal({ src, label, cap, kicker, head, flat }) {
     <section className="zoom-stage bleed" ref={stageRef}>
       <div className="zoom-sticky">
         <div className={'zoom-frame' + (flat ? ' zoom-flat' : '')} ref={frameRef}>
-          {!flat && <img src={src} alt={label || ''} />}
+          {!flat && <img src={src} alt={label || ''} loading="lazy" decoding="async" />}
           <div className="zoom-dark" ref={darkRef}></div>
         </div>
         {cap && <div className="zoom-cap">{cap}</div>}
