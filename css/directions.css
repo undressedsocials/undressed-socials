@@ -1,0 +1,141 @@
+/* ============================================================
+   undressed.socials — 10 whole-site design directions
+   each is a body class (dir-1 … dir-10) that re-art-directs the
+   ENTIRE site within the brand CI: same 5 colour pairs, same 3
+   typefaces (Gluten / Space Grotesk / Instrument Serif), no images.
+   only typographic + structural levers change per direction.
+   switch live via Tweaks → Design direction.
+   ============================================================ */
+
+/* shared hooks these themes lean on:
+   .h-sec .hl  (display headings) · .kicker (eyebrow) · .btn ·
+   .lead .sec-lead .bigstatement (reading) · .mark (hot word) ·
+   section rules (.channel, .pkg-item, .contact-meta, .imprint-block,
+   .wwd-* , .mcard) · .nav                                            */
+
+/* ============================================================
+   01 · POSTER  — the signature. loud flat type, big Gluten.
+   (baseline; only small reinforcements)
+   ============================================================ */
+body.dir-1 .h-sec { font-size: clamp(40px, 6vw, 92px); }
+body.dir-1 .btn { border-radius: 999px; }
+
+/* ============================================================
+   02 · EDITORIAL — magazine. calmer, serif-forward, columned.
+   ============================================================ */
+body.dir-2 .h-sec { font-size: clamp(30px, 3.6vw, 56px); letter-spacing: -.015em; }
+body.dir-2 .hl { font-size: clamp(40px, 7vw, 104px); }
+body.dir-2 .kicker { font-size: 11px; letter-spacing: .34em; opacity: .55; }
+body.dir-2 .lead, body.dir-2 .sec-lead { font-size: clamp(17px, 1.5vw, 20px); line-height: 1.78; column-gap: 48px; }
+body.dir-2 .bigstatement { font-family: var(--font-accent); font-style: italic; font-weight: 400; letter-spacing: 0; line-height: 1.28; font-size: clamp(28px, 4vw, 56px); }
+body.dir-2 .bigstatement .bs-open { font-style: italic; font-weight: 400; }
+body.dir-2 .btn { border-radius: 999px; text-transform: none; letter-spacing: .01em; }
+body.dir-2 .nav-links a { font-size: 13px; }
+
+/* ============================================================
+   03 · BRUTALIST — raw, heavy, hard grid, square buttons.
+   ============================================================ */
+body.dir-3 { --gap-6: clamp(48px, 6vw, 88px); }
+body.dir-3 .h-sec, body.dir-3 .hl { letter-spacing: -.04em; line-height: .82; }
+body.dir-3 .h-sec { font-size: clamp(44px, 7vw, 110px); }
+body.dir-3 .kicker { font-weight: 700; letter-spacing: .12em; opacity: 1; border: 2px solid currentColor; padding: 4px 10px; display: inline-flex; }
+body.dir-3 .btn { border-radius: 0; border-width: 2px; font-weight: 700; }
+body.dir-3 .channel, body.dir-3 .pkg-item, body.dir-3 .wwd-card, body.dir-3 .wwd-row, body.dir-3 .imprint-block, body.dir-3 .contact-meta { border-width: 2px !important; }
+body.dir-3 .wwd-cards-grid, body.dir-3 .wwd-quad { gap: 0; }
+body.dir-3 .wwd-card { border: 2px solid currentColor; margin: -1px 0 0 -1px; }
+body.dir-3 .lead, body.dir-3 .sec-lead { line-height: 1.5; }
+
+/* ============================================================
+   04 · SWISS — disciplined, airy, small type, thin rules.
+   ============================================================ */
+body.dir-4 { --gap-6: clamp(80px, 12vw, 180px); }
+body.dir-4 .kicker { font-size: 11px; letter-spacing: .26em; opacity: .6; }
+body.dir-4 .lead, body.dir-4 .sec-lead { line-height: 1.7; }
+body.dir-4 .channel, body.dir-4 .wwd-row, body.dir-4 .wwd-led-row, body.dir-4 .pkg-item { border-width: 1px !important; }
+body.dir-4 .wwd-cards-grid { gap: 1px; }
+body.dir-4 .wwd-card { border-width: 1px; }
+body.dir-4 .btn { border-radius: 999px; border-width: 1px; font-weight: 500; }
+
+/* ============================================================
+   05 · MAXIMAL — bigger, tighter, overlapping, underlined accents.
+   ============================================================ */
+body.dir-5 .h-sec { font-size: clamp(52px, 9vw, 150px); letter-spacing: -.04em; line-height: .82; }
+body.dir-5 .hl { font-size: clamp(56px, 13vw, 200px); letter-spacing: -.045em; line-height: .8; }
+body.dir-5 .sec-head .h-sec { margin-top: -.06em; }
+body.dir-5 .accent { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 4px; }
+body.dir-5 .bigstatement { font-size: clamp(30px, 5vw, 76px); line-height: 1.08; letter-spacing: -.02em; max-width: 20ch; }
+body.dir-5 .btn { border-radius: 999px; font-weight: 700; }
+body.dir-5 .kicker { font-weight: 700; opacity: .9; }
+
+/* ============================================================
+   06 · MONO — terminal. no Gluten; body-font headings, ruled grid.
+   ============================================================ */
+body.dir-6 .h-sec, body.dir-6 .hl, body.dir-6 .wwd-row-name, body.dir-6 .wwd-tick-name,
+body.dir-6 .wwd-led-name, body.dir-6 .pkg-name {
+  font-family: var(--font-body); font-weight: 700; text-transform: uppercase;
+  letter-spacing: .04em; line-height: 1.05;
+}
+body.dir-6 .h-sec { font-size: clamp(24px, 3vw, 44px); }
+body.dir-6 .hl { font-size: clamp(34px, 5vw, 72px); }
+body.dir-6 .kicker { font-family: var(--font-body); }
+body.dir-6 a.nav-links, body.dir-6 .nav-links a { text-decoration: none; }
+body.dir-6 .lead a, body.dir-6 .contact-meta a, body.dir-6 .foot-meta a { text-decoration: underline; text-underline-offset: 3px; }
+body.dir-6 .btn { border-radius: 0; text-transform: uppercase; letter-spacing: .08em; font-weight: 600; }
+body.dir-6 .bigstatement { font-size: clamp(22px, 2.6vw, 34px); line-height: 1.5; }
+body.dir-6 .mark { -webkit-text-stroke: 0; color: var(--surface); background: var(--text); padding: 0 .12em; }
+
+/* ============================================================
+   07 · OUTLINE — line-art. hollow stroked headings, thin borders.
+   ============================================================ */
+body.dir-7 .h-sec, body.dir-7 .hl {
+  color: transparent; -webkit-text-stroke: 1.5px var(--text);
+  font-variation-settings: "wght" 900;
+}
+body.dir-7 .h-sec { font-size: clamp(44px, 7vw, 120px); }
+body.dir-7 .mark { -webkit-text-stroke: 1.5px var(--text); color: transparent; }
+body.dir-7 .channel, body.dir-7 .pkg-item, body.dir-7 .wwd-card, body.dir-7 .wwd-row,
+body.dir-7 .imprint-block, body.dir-7 .contact-meta, body.dir-7 .id-block { border-width: 1px !important; }
+body.dir-7 .btn { border-radius: 999px; border-width: 1px; }
+body.dir-7 .kicker { opacity: .7; }
+
+/* ============================================================
+   08 · LEDGER — index/table. numbered, ruled, small headings.
+   ============================================================ */
+body.dir-8 .h-sec { font-family: var(--font-body); font-weight: 700; text-transform: lowercase; letter-spacing: -.01em; font-size: clamp(24px, 3vw, 42px); }
+body.dir-8 .hl { font-size: clamp(38px, 6vw, 92px); }
+body.dir-8 .sec-head .h-sec { padding-top: var(--gap-3); border-top: 2px solid currentColor; }
+body.dir-8 .kicker { font-variant-numeric: tabular-nums; opacity: .6; }
+body.dir-8 .channel, body.dir-8 .wwd-row, body.dir-8 .wwd-led-row, body.dir-8 .pkg-item,
+body.dir-8 .wwd-min-item { border-width: 1px !important; }
+body.dir-8 .btn { border-radius: 0; border-width: 1px; font-weight: 600; }
+body.dir-8 .bigstatement { font-weight: 400; font-size: clamp(22px, 2.8vw, 36px); line-height: 1.5; }
+
+/* ============================================================
+   09 · CENTERED — symmetric. everything centred.
+   ============================================================ */
+body.dir-9 .wrap { text-align: center; }
+body.dir-9 .kicker { justify-content: center; }
+body.dir-9 .h-sec, body.dir-9 .hl, body.dir-9 .bigstatement, body.dir-9 .sec-lead, body.dir-9 .lead,
+body.dir-9 .h-sub { margin-left: auto; margin-right: auto; }
+body.dir-9 .h-sec { font-size: clamp(36px, 5vw, 80px); }
+body.dir-9 .lead, body.dir-9 .sec-lead, body.dir-9 .bigstatement { max-width: 52ch; }
+body.dir-9 .hero-cta, body.dir-9 .contact-meta { justify-content: center; }
+body.dir-9 .channels, body.dir-9 .wwd-rows, body.dir-9 .wwd-ledger { text-align: left; }
+body.dir-9 .btn { border-radius: 999px; }
+/* left-align the data rows again so they stay legible */
+body.dir-9 .channel, body.dir-9 .wwd-row, body.dir-9 .pkg-row, body.dir-9 .imprint-block { text-align: left; }
+
+/* ============================================================
+   10 · ZINE — playful. tilted kickers, sticker pills, accent blocks.
+   ============================================================ */
+body.dir-10 .kicker { transform: rotate(-2deg); display: inline-flex; border: 2px solid currentColor; border-radius: 999px; padding: 5px 13px; font-weight: 700; opacity: 1; }
+body.dir-10 .h-sec { font-size: clamp(38px, 5.6vw, 88px); }
+body.dir-10 .h-sec .mark, body.dir-10 .hl .mark {
+  -webkit-text-stroke: 0; color: var(--surface); background: var(--text);
+  padding: 0 .1em; border-radius: .12em; box-decoration-break: clone; -webkit-box-decoration-break: clone;
+}
+body.dir-10 .btn { border-radius: 999px; font-weight: 700; transform: rotate(-1.5deg); }
+body.dir-10 .btn.solid { box-shadow: 4px 4px 0 currentColor; }
+body.dir-10 .wwd-card, body.dir-10 .pkg-item, body.dir-10 .channel { border-width: 2px !important; }
+body.dir-10 .wwd-card:nth-child(even) { transform: rotate(.8deg); }
+body.dir-10 .wwd-card:nth-child(odd) { transform: rotate(-.8deg); }

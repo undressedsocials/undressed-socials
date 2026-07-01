@@ -1,0 +1,237 @@
+/* ============================================================
+   undressed.socials — colours & type
+   "social media, but different."
+   Source: undressed.socials_CI_v3.pdf (Linda Hiller, 2026)
+   ============================================================ */
+
+/* ---------- FONTS ---------- */
+@font-face {
+  font-family: "Gluten";
+  src: url("../fonts/Gluten-VariableFont_slnt_wght.ttf") format("truetype");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Space Grotesk";
+  src: url("../fonts/SpaceGrotesk-VariableFont_wght.ttf") format("truetype");
+  font-weight: 300 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Instrument Serif";
+  src: url("../fonts/InstrumentSerif-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Instrument Serif";
+  src: url("../fonts/InstrumentSerif-Italic.ttf") format("truetype");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+:root {
+  /* ---------- TYPE FAMILIES (three voices) ---------- */
+  --font-display: "Gluten", system-ui, sans-serif;     /* shouts the short stuff  */
+  --font-body:    "Space Grotesk", system-ui, sans-serif; /* everything you read   */
+  --font-accent:  "Instrument Serif", Georgia, serif;  /* whispers the accents    */
+
+  --display-weight: 900;  /* Gluten Black — display is ALWAYS black */
+
+  /* ---------- COLOUR — FIVE PAIRS ----------
+     Always work colour on colour. One family per piece.
+     Each pair = one surface + the one text colour beside it.
+     Never a rainbow. Never two accents in the logo.            */
+
+  /* raw swatches */
+  --blood:  #87000C;  /* deep cherry red   */
+  --sun:    #F4ED57;  /* acid yellow       */
+  --sky:    #C6DCFF;  /* pale periwinkle   */
+  --candy:  #FBCDE0;  /* bubblegum pink    */
+  --flame:  #E64B27;  /* hot orange-red    */
+  --olive:  #58621E;  /* deep olive green  */
+  --blush:  #FFEAF2;  /* palest pink       */
+  --teal:   #1E5B62;  /* deep teal         */
+  --mint:   #E9FFC1;  /* pale lime         */
+
+  /* PAIR 1 — BLOOD · SUN */
+  --p1-surface: var(--blood);
+  --p1-text:    var(--sun);
+  /* PAIR 2 — SKY · BLOOD */
+  --p2-surface: var(--sky);
+  --p2-text:    var(--blood);
+  /* PAIR 3 — CANDY · FLAME */
+  --p3-surface: var(--candy);
+  --p3-text:    var(--flame);
+  /* PAIR 4 — OLIVE · BLUSH */
+  --p4-surface: var(--olive);
+  --p4-text:    var(--blush);
+  /* PAIR 5 — TEAL · MINT */
+  --p5-surface: var(--teal);
+  --p5-text:    var(--mint);
+
+  /* active colourway — default to BLOOD · SUN.
+     Re-point these two vars (or use a .pair-* class) per piece. */
+  --surface: var(--p1-surface);
+  --text:    var(--p1-text);
+
+  /* ---------- TYPE SCALE — four fixed sizes ----------
+     DISPLAY is the anchor (1.0×). Every other size is a fixed
+     fraction of it, so the hierarchy holds at any scale.
+     Re-set --display to rescale the whole system at once.       */
+  --display: 96px;                                  /* 1.0×  headlines & logo   */
+  --heading: calc(var(--display) * 0.6);            /* 0.6×  sub-headlines      */
+  --body:    calc(var(--display) * 0.4);            /* 0.4×  the text you read  */
+  --caption: calc(var(--display) * 0.28);           /* 0.28× labels & captions  */
+
+  /* a comfortable reading anchor for long-form UI/body copy.
+     (the 0.4× poster ratio is for hero layouts, not paragraphs) */
+  --display-ui: 40px;
+  --read-lg: 20px;
+  --read:    16px;
+  --read-sm: 14px;
+  --read-xs: 12px;
+
+  --leading-tight: 0.95;   /* display — packed, set tight        */
+  --leading-snug:  1.1;    /* headings                            */
+  --leading-body:  1.45;   /* body copy                           */
+  --tracking-display: -0.02em;
+  --tracking-caps: 0.32em; /* the spaced-out caps label treatment */
+
+  /* ---------- SPACING — use ONLY these gaps ----------
+     Pick from this list, never in-between values. */
+  --gap-1: 4px;   /* tiny — icon next to text          */
+  --gap-2: 8px;   /* padding inside buttons & pills     */
+  --gap-3: 16px;  /* space between elements            */
+  --gap-4: 24px;  /* space between groups              */
+  --gap-5: 40px;  /* space between whole blocks        */
+  --page-margin: 24px; /* = 1× logo height, min 24px   */
+
+  /* ---------- SHAPE ----------
+     Flat, bold, colour-on-colour. Corners stay sharp on blocks;
+     only buttons/pills and avatars round fully. */
+  --radius-block: 0px;
+  --radius-pill:  999px;
+  --radius-avatar: 999px;
+
+  /* logo clear space = 1× cherry height */
+  --logo-min-w: 120px;
+  --cherry-min: 32px;
+}
+
+/* ============================================================
+   COLOURWAY HELPERS
+   Add a .pair-N class to any block to flip surface + text.
+   Always paint the surface AND set the text colour together.
+   ============================================================ */
+.pair-1 { --surface: var(--p1-surface); --text: var(--p1-text); }
+.pair-2 { --surface: var(--p2-surface); --text: var(--p2-text); }
+.pair-3 { --surface: var(--p3-surface); --text: var(--p3-text); }
+.pair-4 { --surface: var(--p4-surface); --text: var(--p4-text); }
+.pair-5 { --surface: var(--p5-surface); --text: var(--p5-text); }
+
+.surface {
+  background: var(--surface);
+  color: var(--text);
+}
+
+/* ============================================================
+   SEMANTIC TYPE ROLES
+   ============================================================ */
+.display, h1.display {
+  font-family: var(--font-display);
+  font-weight: var(--display-weight);
+  font-size: var(--display);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-display);
+  text-transform: lowercase;   /* the brand speaks in lowercase */
+}
+.heading {
+  font-family: var(--font-display);
+  font-weight: var(--display-weight);
+  font-size: var(--heading);
+  line-height: var(--leading-snug);
+  letter-spacing: var(--tracking-display);
+  text-transform: lowercase;
+}
+.body {
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: var(--read);
+  line-height: var(--leading-body);
+}
+.caption, .label {
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: var(--read-xs);
+  line-height: 1.2;
+}
+/* the spaced-out caps label — "↓ T H E N A K E D T R U T H" */
+.label-caps {
+  font-family: var(--font-body);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-caps);
+  font-size: var(--read-xs);
+}
+/* italic serif accent — used sparingly, one phrase at a time */
+.accent {
+  font-family: var(--font-accent);
+  font-style: italic;
+  font-weight: 400;
+}
+
+/* ------------------------------------------------------------
+   HIGHLIGHT MARKER — the "hot word" block
+   Drops a solid block of the TEXT colour behind a word and flips
+   the word to the SURFACE colour (inverted highlight). Use it to
+   mark ONE hot word per headline — e.g. "we strip brands [bare.]".
+   Wrap the word in <span class="mark">…</span>. Clones across line
+   breaks so a wrapped phrase keeps its block on every line.
+   ------------------------------------------------------------ */
+.mark {
+  background: var(--text);
+  color: var(--surface);
+  padding: 0.04em 0.16em;
+  border-radius: 3px;          /* nearly sharp — flat poster feel */
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+/* ============================================================
+   COMPONENTS — minimal primitives
+   ============================================================ */
+.btn {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: var(--read-sm);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: var(--gap-2) var(--gap-4);
+  border-radius: var(--radius-pill);
+  border: 2px solid var(--text);
+  background: transparent;
+  color: var(--text);
+  cursor: pointer;
+  transition: background .15s ease, color .15s ease, transform .1s ease;
+}
+.btn:hover  { background: var(--text); color: var(--surface); }
+.btn:active { transform: scale(0.97); }
+
+.btn-solid {
+  background: var(--text);
+  color: var(--surface);
+}
+.btn-solid:hover { opacity: 0.88; background: var(--text); color: var(--surface); }
+
+.cherry {                 /* inline cherry mark — colour via `color` */
+  display: inline-block;
+  width: 1em; height: 1em;
+  vertical-align: -0.12em;
+}
+.cherry path, .cherry circle { fill: currentColor; }
+.cherry .stem { fill: none; stroke: currentColor; }
