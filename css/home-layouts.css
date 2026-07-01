@@ -61,7 +61,7 @@
 
 /* scroll-jack hold: the hero (first paragraph) pins for ~0.7 screen, then
    releases so the page scrolls on normally to the next paragraph. */
-.hero-jack { position: relative; height: 230vh; }
+.hero-jack { position: relative; height: 175vh; }
 .hero-pin { position: sticky; top: 0; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; }
 .anim-off .hero-jack { height: auto; }
 .anim-off .hero-pin { position: static; min-height: 0; }

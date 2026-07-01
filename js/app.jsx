@@ -43,9 +43,14 @@ function App() {
   const [parsed, setParsed] = useApp(routeFromHash());
   const [menuOpen, setMenuOpen] = useApp(false);
   const [lang, setLangState] = useApp(() => {
-    try {return localStorage.getItem('us_lang') || 'en';} catch (e) {return 'en';}
+    // saved choice wins; otherwise follow the browser language (German-speaking
+    // visitors get DE by default, everyone else EN).
+    const auto = ((navigator.language || 'en').toLowerCase().indexOf('de') === 0) ? 'de' : 'en';
+    try {return localStorage.getItem('us_lang') || auto;} catch (e) {return auto;}
   });
   const setLang = (l) => {setLangState(l);try {localStorage.setItem('us_lang', l);} catch (e) {}};
+
+  useAppE(() => {document.documentElement.lang = lang;}, [lang]);
 
   useAppE(() => {
     const onHash = () => setParsed(routeFromHash());

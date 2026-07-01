@@ -81,7 +81,7 @@ function SiteFooter({ nav }) {
         </div>
         <div className="foot-col" data-comment-anchor="dc6f41a04f-div-84-11">
           <span className="foot-h">{t({ en: 'contact', de: 'Kontakt' })}</span>
-          <a href="mailto:hello@undressed.socials" data-magnetic>hello@undressed.socials</a>
+          <a href="mailto:linda@undressedsocials.com" data-magnetic>linda@undressedsocials.com</a>
           <a href="https://instagram.com/undressedsocials" target="_blank" rel="noopener" data-magnetic>@undressedsocials</a>
           <a href="tel:+436706590073">+43 670 6590073</a>
         </div>

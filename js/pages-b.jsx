@@ -242,7 +242,7 @@ function ContactPage() {
           <div className="contact-meta">
             <div>
               <span className="lbl">{t(UI.formEmail)}</span>
-              <a href="mailto:hello@undressed.socials"><DisperseText as="span" text="hello@undressed.socials" /></a>
+              <a href="mailto:linda@undressedsocials.com"><DisperseText as="span" text="linda@undressedsocials.com" /></a>
             </div>
             <div>
               <span className="lbl">instagram</span>
@@ -288,7 +288,7 @@ function ImprintPage({ nav }) {
   },
   {
     label: { en: 'contact', de: 'Kontakt' },
-    lines: ['hello@undressed.socials', '+43 670 6590073', '@undressedsocials']
+    lines: ['linda@undressedsocials.com', '+43 670 6590073', '@undressedsocials']
   },
   {
     label: { en: 'business details', de: 'Unternehmensdaten' },

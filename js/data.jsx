@@ -249,8 +249,8 @@ const REFERENCES = ['skinfit international', 'lieblingsglas', 'everdrop', 'jonny
 const PRIVACY = [
   {
     q: { en: 'who is responsible', de: 'wer ist verantwortlich' },
-    a: { en: 'the controller for data processing on this site is Linda Hiller, undressed.socials, [ address ], Dornbirn, Austria — hello@undressed.socials. reach us any time with privacy questions.',
-         de: 'verantwortlich für die Datenverarbeitung auf dieser Seite ist Linda Hiller, undressed.socials, [ Adresse ], Dornbirn, Österreich — hello@undressed.socials. melde dich jederzeit mit Datenschutzfragen.' },
+    a: { en: 'the controller for data processing on this site is Linda Hiller, undressed.socials, [ address ], Dornbirn, Austria — linda@undressedsocials.com. reach us any time with privacy questions.',
+         de: 'verantwortlich für die Datenverarbeitung auf dieser Seite ist Linda Hiller, undressed.socials, [ Adresse ], Dornbirn, Österreich — linda@undressedsocials.com. melde dich jederzeit mit Datenschutzfragen.' },
   },
   {
     q: { en: 'what we collect', de: 'welche Daten wir erheben' },
@@ -264,8 +264,8 @@ const PRIVACY = [
   },
   {
     q: { en: 'hosting', de: 'Hosting' },
-    a: { en: 'this site is hosted by [ hosting provider + location ]. the host processes the above log data on our behalf under a data-processing agreement (Art 28 GDPR).',
-         de: 'diese Seite wird von [ Hosting-Anbieter + Standort ] gehostet. der Hoster verarbeitet die genannten Logdaten in unserem Auftrag auf Grundlage eines Auftragsverarbeitungsvertrags (Art 28 DSGVO).' },
+    a: { en: 'this site is hosted by Vercel Inc., 440 N Barranca Ave #4133, Covina, CA 91723, USA, delivered via its global edge network (including EU servers). Vercel processes the above log data on our behalf under a data-processing agreement (Art 28 GDPR); transfers to the USA are safeguarded by the EU standard contractual clauses (Art 46 GDPR).',
+         de: 'diese Seite wird von Vercel Inc., 440 N Barranca Ave #4133, Covina, CA 91723, USA gehostet und über deren globales Edge-Netzwerk (inkl. EU-Servern) ausgeliefert. Vercel verarbeitet die genannten Logdaten in unserem Auftrag auf Grundlage eines Auftragsverarbeitungsvertrags (Art 28 DSGVO); Übermittlungen in die USA sind durch die EU-Standardvertragsklauseln (Art 46 DSGVO) abgesichert.' },
   },
   {
     q: { en: 'cookies & local storage', de: 'Cookies & lokaler Speicher' },
@@ -279,13 +279,13 @@ const PRIVACY = [
   },
   {
     q: { en: 'how long we keep it', de: 'Speicherdauer' },
-    a: { en: 'enquiry data is kept as long as needed to answer you and to meet legal retention duties (e.g. accounting), then deleted. log files are deleted after [ X ] months.',
-         de: 'Anfragedaten werden so lange gespeichert, wie es zur Beantwortung und zur Erfüllung gesetzlicher Aufbewahrungspflichten (z. B. Buchhaltung) nötig ist, danach gelöscht. Logfiles werden nach [ X ] Monaten gelöscht.' },
+    a: { en: 'enquiry data is kept as long as needed to answer you and to meet legal retention duties (e.g. accounting), then deleted. log files are deleted by the host after 30 days at the latest.',
+         de: 'Anfragedaten werden so lange gespeichert, wie es zur Beantwortung und zur Erfüllung gesetzlicher Aufbewahrungspflichten (z. B. Buchhaltung) nötig ist, danach gelöscht. Logfiles werden vom Hoster spätestens nach 30 Tagen gelöscht.' },
   },
   {
     q: { en: 'your rights', de: 'deine Rechte' },
-    a: { en: 'you have the right to access, rectification, erasure, restriction, data portability and objection. you may also lodge a complaint with the Austrian Data Protection Authority (dsb.gv.at). just email hello@undressed.socials to exercise any of these.',
-         de: 'du hast das Recht auf Auskunft, Berichtigung, Löschung, Einschränkung, Datenübertragbarkeit und Widerspruch. du kannst dich außerdem bei der österreichischen Datenschutzbehörde (dsb.gv.at) beschweren. schreib einfach an hello@undressed.socials, um eines dieser Rechte auszuüben.' },
+    a: { en: 'you have the right to access, rectification, erasure, restriction, data portability and objection. you may also lodge a complaint with the Austrian Data Protection Authority (dsb.gv.at). just email linda@undressedsocials.com to exercise any of these.',
+         de: 'du hast das Recht auf Auskunft, Berichtigung, Löschung, Einschränkung, Datenübertragbarkeit und Widerspruch. du kannst dich außerdem bei der österreichischen Datenschutzbehörde (dsb.gv.at) beschweren. schreib einfach an linda@undressedsocials.com, um eines dieser Rechte auszuüben.' },
   },
 ];
 

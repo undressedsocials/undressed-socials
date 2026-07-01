@@ -706,6 +706,10 @@ Object.assign(window, { Plate, Fx, ZoomReveal, StripReveal, FillReveal, Channels
      2) the cherry grows to fill the screen;
      3) the cherry dissolves and the next section is revealed.
    Plays once per page load (window.__introSeen); skipped when motion is off. */
+/* remember across the browser session that the full loader already played,
+   so reloads and return visits within the session get the short MiniIntro. */
+try { if (sessionStorage.getItem('us_introSeen') === '1') window.__introSeen = true; } catch (e) {}
+
 function IntroHero() {
   const stageRef = useFxR(null);
   const lockRef = useFxR(null);
@@ -724,7 +728,7 @@ function IntroHero() {
   useFxE(() => {
     document.body.style.overflow = 'hidden';
     window.scrollTo(0, 0);
-    const dur = 1800;
+    const dur = 700;
     const start = performance.now();
     let raf;
     const tick = (now) => {
@@ -736,6 +740,7 @@ function IntroHero() {
       {
         setLoaded(true);
         window.__introSeen = true;
+        try { sessionStorage.setItem('us_introSeen', '1'); } catch (e) {}
         document.body.style.overflow = '';
         document.body.classList.remove('intro-on');
       }

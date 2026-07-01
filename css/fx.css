@@ -53,7 +53,7 @@
 @media (prefers-reduced-motion: reduce) { .mini-intro { display: none; } }
 
 /* ---------------- INTRO LOADER (home only) ---------------- */
-.intro-stage { position: relative; height: 182vh; }
+.intro-stage { position: relative; height: 150vh; }
 .intro-sticky { position: sticky; top: 0; height: 100vh; background: var(--surface); color: var(--text); overflow: clip; }
 
 /* cherry + wordmark as separate layers so they can be choreographed apart.
