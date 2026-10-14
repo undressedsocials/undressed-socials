@@ -57,6 +57,8 @@ function HomePage({ nav, layout }) {
         })}
       </HeroJack>
 
+      <VeloMarquee text={t({ en: 'the naked truth', de: 'die nackte Wahrheit' })} />
+
       <main className="band band-tight-top" data-comment-anchor="6431d3a18d-main-65-7">
         <div className="wrap" data-comment-anchor="83999df7d6-div-61-9">
           <WhatWeDo layout={layout} />
@@ -87,15 +89,28 @@ function HomePage({ nav, layout }) {
               {t(PACKAGES_INTRO)}
             </p>
           </Reveal>
-          <div className="svc-grid" style={{ marginTop: 'var(--gap-5)' }} data-comment-anchor="a4bb40d805-div-88-11">
-            {SERVICES.map((s, i) => <ServiceCard key={s.slug} s={s} delay={i * 90} />)}
-          </div>
+          <PanelStack>
+            {/* display order tuned for the colour finale: the last card must NOT
+                share the home surface (sky), so redressed (olive) closes the deck */}
+            {['the-undress', 'bare-feed', 'creative-production', 'bare-influence', 'redressed'].
+            map((slug) => SERVICES.find((s) => s.slug === slug)).filter(Boolean).
+            map((s, i) => <ServicePanel key={s.slug} s={s} i={i} />)}
+          </PanelStack>
 
           <Reveal delay={80}>
             <div style={{ marginTop: 'var(--gap-5)' }} data-comment-anchor="fc249826d3-div-95-11">
               <Button data-magnetic onClick={() => nav('process')}>{t({ en: 'see the full process →', de: 'den ganzen Prozess ansehen →' })}</Button>
             </div>
           </Reveal>
+
+          {/* closing statement — the page ends on a beat, not a whisper */}
+          <div style={{ marginTop: 'var(--gap-6)', marginBottom: 'var(--gap-5)' }}>
+            <MaskHeading text={TAGLINES.footer} className="h-sec" />
+            <div className="hero-cta" style={{ marginTop: 'var(--gap-4)' }}>
+              <Button lg solid data-magnetic onClick={() => nav('contact')}>{UI.workWithUs}</Button>
+              <Button lg data-magnetic onClick={() => nav('work')}>{t({ en: 'see the work →', de: 'Arbeiten ansehen →' })}</Button>
+            </div>
+          </div>
         </div>
       </main>
     </React.Fragment>);

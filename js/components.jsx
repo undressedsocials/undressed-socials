@@ -107,7 +107,8 @@ function splitNode(node, key) {
   }
   return node;
 }
-function SplitText({ children }) { return <React.Fragment>{splitNode(children, 's')}</React.Fragment>; }
+/* renamed from "SplitText" — that name must stay free for the GSAP plugin global */
+function CharSplit({ children }) { return <React.Fragment>{splitNode(children, 's')}</React.Fragment>; }
 
 /* BigStatement — the signature large lead paragraph used as each page's intro.
    An italic-serif opener (the whispered accent) leads a Space-Grotesk statement;
@@ -116,13 +117,13 @@ function SplitText({ children }) { return <React.Fragment>{splitNode(children, '
 function BigStatement({ open, children, className = '', style }) {
   return (
     <p className={'bigstatement splithover' + (className ? ' ' + className : '')} style={style}>
-      {open ? <span className="bs-open"><SplitText>{open + ' '}</SplitText></span> : null}
-      <SplitText>{children}</SplitText>
+      {open ? <span className="bs-open"><CharSplit>{open + ' '}</CharSplit></span> : null}
+      <CharSplit>{children}</CharSplit>
     </p>
   );
 }
 
-Object.assign(window, { BigStatement, SplitText });
+Object.assign(window, { BigStatement, CharSplit });
 
 /* Kinetic headline — words rise + fade in with a stagger on mount.
    Base state is the VISIBLE end-state under reduced-motion / anim-off,

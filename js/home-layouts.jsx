@@ -228,7 +228,9 @@ function L_minimal(t) {
    number gutter · giant word · quiet descriptor that lights on hover.
    the descriptors no longer crowd the words → calm, ordered, still big. */
 function L_stack(t) {
-  const fills = ['solid', 'muted', 'outline', 'soft'];
+  /* all-outline: keeps the wwd words editorial/hollow so the solid service
+     panels right after read as a different, product-weight voice */
+  const fills = ['outline', 'outline', 'outline', 'outline'];
   return (
     <React.Fragment>
       <WwdHead t={t} />

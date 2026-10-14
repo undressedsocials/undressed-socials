@@ -270,8 +270,11 @@ body.intro-on .nav { opacity: 0; transform: translateY(-8px); pointer-events: no
 .cherry-cursor {
   position: fixed; left: 0; top: 0; width: 30px; height: 30px;
   margin: -15px 0 0 -15px; z-index: 9000; pointer-events: none;
-  color: var(--text); opacity: 0;
-  transition: opacity .25s ease;
+  color: var(--cur-fg, var(--text)); opacity: 0;
+  /* thin halo in the opposite tone: keeps the cherry readable on photos and
+     on any surface the colour pick can't see */
+  filter: drop-shadow(0 0 1px var(--cur-halo, transparent)) drop-shadow(0 0 1px var(--cur-halo, transparent)) drop-shadow(0 0 1.5px var(--cur-halo, transparent));
+  transition: opacity .25s ease, color .12s linear;
   will-change: transform;
 }
 .cherry-cursor.live { opacity: 1; }

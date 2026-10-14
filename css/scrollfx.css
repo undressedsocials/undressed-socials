@@ -1,0 +1,202 @@
+/* ============================================================
+   scrollfx.css — the GSAP + Lenis motion layer
+   panel stack · velocity marquee · gradient field · lenis glue
+   ============================================================ */
+
+/* ---------- lenis glue (per official recommendations) ---------- */
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+.lenis.lenis-stopped { overflow: hidden; }
+
+/* ---------- PanelStack — kota-style stacked service panels ---------- */
+.pnl-stage {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(16px, 3vh, 28px);
+  margin-top: var(--gap-5);
+}
+.pnl {
+  position: sticky;
+  /* per-depth peek offset: earlier cards keep a visible sliver */
+  top: calc(clamp(64px, 9vh, 96px) + var(--pi, 0) * clamp(8px, 1.2vh, 14px));
+  background: var(--surface);
+  color: var(--text);
+  border-radius: clamp(20px, 3vw, 36px);
+  min-height: min(74vh, 680px);
+  min-height: min(74svh, 680px);
+  display: flex;
+  overflow: hidden;
+  box-shadow: 0 -12px 40px rgba(0, 0, 0, 0.10);
+}
+/* pair-3 flame-on-candy fails WCAG on text — deepen the flame inside panels */
+.pnl.pair-3 { --text: #93290C; }
+/* the dim veil an underlying card wears as the next slides over it —
+   a real element (cheap compositor opacity), tinted into the pair
+   instead of flat black so pastels don't turn to sludge */
+.pnl-veil {
+  position: absolute;
+  inset: 0;
+  background: color-mix(in srgb, var(--text) 78%, #000);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+@supports not (background: color-mix(in srgb, red 50%, black)) {
+  .pnl-veil { background: #000; }
+}
+.pnl-in {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--gap-4);
+  padding: clamp(24px, 4.5vw, 56px);
+  width: 100%;
+}
+.pnl-top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--gap-3);
+}
+.pnl-num {
+  font-family: var(--font-body);
+  font-size: var(--read);
+  letter-spacing: var(--tracking-caps);
+}
+.pnl-tag {
+  font-family: var(--font-body);
+  font-size: var(--read-sm);
+  text-transform: lowercase;
+  letter-spacing: var(--tracking-caps);
+}
+.pnl-name {
+  font-family: var(--font-display);
+  font-weight: var(--display-weight);
+  font-size: clamp(40px, 7vw, 96px);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-display);
+  margin: 0;
+  max-width: 14ch;
+}
+.pnl-desc {
+  font-family: var(--font-body);
+  font-size: var(--read-lg);
+  line-height: var(--leading-body);
+  max-width: 44ch;
+  margin: 0;
+}
+.pnl-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.pnl-chips li {
+  font-family: var(--font-body);
+  font-size: var(--read-sm);
+  padding: 8px 16px;
+  border: 1.5px solid currentColor;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+.pnl-cta {
+  align-self: flex-start;
+  font-family: var(--font-body);
+  font-size: var(--read-lg);
+  text-decoration: none;
+  color: inherit;
+  border-bottom: 2px solid currentColor;
+  padding-bottom: 2px;
+  scroll-margin-top: 140px;
+}
+/* keyboard access: a focused card must rise above the ones stacked on it */
+.pnl:focus-within { z-index: 2; }
+.pnl-cta:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 4px;
+}
+
+/* ---------- VeloMarquee ---------- */
+.vmq {
+  overflow: hidden;
+  white-space: nowrap;
+  padding: clamp(18px, 3.2vh, 34px) 0;
+  border-top: 2px solid var(--text);
+  border-bottom: 2px solid var(--text);
+  user-select: none;
+}
+.vmq-track {
+  display: inline-flex;
+  align-items: baseline;
+  will-change: transform;
+}
+.vmq-item {
+  font-family: var(--font-display);
+  font-weight: var(--display-weight);
+  font-size: clamp(40px, 7vw, 96px);
+  line-height: 1;
+  letter-spacing: var(--tracking-display);
+  padding-right: 0.45em;
+}
+.vmq-dot {
+  padding-left: 0.45em;
+  font-family: var(--font-accent);
+}
+
+/* ---------- GradientField ---------- */
+.gradient-field {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  pointer-events: none;
+}
+/* hero hosts the field behind its content */
+.hero-pin { position: relative; }
+.hero-pin > .wrap { position: relative; z-index: 1; }
+.hero-pin > .gradient-field { z-index: 0; }
+
+/* ---------- motion pause toggle (WCAG 2.2.2) ---------- */
+.motion-toggle {
+  position: fixed;
+  left: 14px;
+  bottom: 14px;
+  z-index: 60;
+  font-family: var(--font-body);
+  font-size: var(--read-xs);
+  letter-spacing: 0.08em;
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1.5px solid var(--text);
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+  opacity: 0.75;
+}
+.motion-toggle:hover, .motion-toggle:focus-visible { opacity: 1; }
+.motion-toggle:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
+
+/* ---------- small screens ---------- */
+@media (max-width: 720px) {
+  .pnl { min-height: calc(100svh - 96px); }
+  .pnl-name { font-size: clamp(38px, 11vw, 60px); }
+  .pnl-desc { font-size: var(--read); }
+}
+
+/* ---------- reduced motion / animations off: truly static.
+   transform overrides also neutralize any frozen mid-scrub state. ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .vmq-track { transform: none !important; }
+  .pnl { position: relative; top: auto; transform: none !important; }
+  .pnl-in { transform: none !important; }
+  .pnl-veil { opacity: 0 !important; visibility: hidden !important; }
+}
+body.anim-off .pnl { position: relative; top: auto; transform: none !important; }
+body.anim-off .pnl-in { transform: none !important; }
+body.anim-off .pnl-veil { opacity: 0 !important; visibility: hidden !important; }
+body.anim-off .vmq-track { transform: none !important; }

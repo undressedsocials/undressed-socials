@@ -40,6 +40,9 @@ function routeFromHash() {
 
 function App() {
   const [t, setTweak] = useTweaks(TWEAK_DEFAULTS);
+  // keep the global flag in sync DURING render — child effects read it
+  // before this component's own effects would have run.
+  window.__revealOff = !t.animations;
   const [parsed, setParsed] = useApp(routeFromHash());
   const [menuOpen, setMenuOpen] = useApp(false);
   const [lang, setLangState] = useApp(() => {
@@ -67,13 +70,28 @@ function App() {
     // don't jump to top when deep-linking a package — the page scrolls to it.
     // use an INSTANT reset (not the page's smooth scroll) so a new subpage simply
     // starts at the top instead of animating the old content all the way up.
-    if (!(parsed.key === 'process' && parsed.slug)) window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    if (!(parsed.key === 'process' && parsed.slug)) {
+      if (window.__lenis) window.__lenis.scrollTo(0, { immediate: true, force: true });else
+      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    }
+    // new page, new layout: let ScrollTrigger re-measure after the route paints.
+    if (window.ScrollTrigger) {
+      requestAnimationFrame(() => requestAnimationFrame(() => window.ScrollTrigger.refresh()));
+    }
   }, [parsed.key, parsed.slug]);
 
   useAppE(() => {
     window.__revealOff = !t.animations;
     document.body.classList.toggle('anim-off', !t.animations);
   }, [t.animations]);
+
+  // OS-level "reduce motion" flipped on mid-session → drop the whole layer.
+  useAppE(() => {
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const onChange = () => { if (mq.matches) setTweak('animations', false); };
+    if (mq.addEventListener) mq.addEventListener('change', onChange);
+    return () => { if (mq.removeEventListener) mq.removeEventListener('change', onChange); };
+  }, []);
 
   useAppE(() => {
     document.body.classList.remove('hm-wipe', 'hm-rise', 'hm-fade');
@@ -87,6 +105,7 @@ function App() {
 
   useAppE(() => {
     document.body.style.overflow = menuOpen ? 'hidden' : '';
+    if (window.__lenis) { menuOpen ? window.__lenis.stop() : window.__lenis.start(); }
   }, [menuOpen]);
 
   // sticky-footer reveal: measure the footer and reserve that much scroll space
@@ -129,6 +148,8 @@ function App() {
 
         <Fx cursor={fxOn && t.cherryCursor} magnetic={fxOn && t.magnetic}
         parallax={fxOn && t.parallax} intensity={t.intensity} />
+        <ScrollFxBoot active={fxOn} />
+        <MotionToggle on={t.animations} onToggle={(v) => setTweak('animations', v)} />
 
         <TweaksPanel>
           <TweakSection label="Design direction" data-comment-anchor="56e3caeecc-div-80-5" />

@@ -45,23 +45,97 @@ function Fx({ cursor, magnetic, parallax, intensity = 50 }) {
     document.body.classList.toggle('cur-on', useCursor);
 
     let x = window.innerWidth / 2,y = window.innerHeight / 2;
-    let cx = x,cy = y,raf = 0;
+    let cs = 1,raf = 0;
     let hot = false,down = false,overChrome = false;
     const el = curRef.current;
     const k = () => (window.__fxIntensity ?? 50) / 50;
 
+    /* adaptive cursor colour: find the real surface under the pointer and pick
+       whichever brand colour (that spot's --text or --surface) contrasts most.
+       a halo in the surface colour keeps it visible over photos too. */
+    const parseRGB = (c) => {
+      const m = c && c.match(/rgba?\(([^)]+)\)/);
+      if (m) { const v = m[1].split(/[\s,\/]+/).filter(Boolean).map(parseFloat); return [v[0], v[1], v[2], v[3] == null ? 1 : v[3]]; }
+      const h = c && c.trim().match(/^#([0-9a-f]{3}|[0-9a-f]{6})$/i);
+      if (!h) return null;
+      let hx = h[1]; if (hx.length === 3) hx = hx.replace(/./g, '$&$&');
+      return [parseInt(hx.slice(0, 2), 16), parseInt(hx.slice(2, 4), 16), parseInt(hx.slice(4, 6), 16), 1];
+    };
+    const lum = (c) => {
+      const f = (v) => { v /= 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); };
+      return 0.2126 * f(c[0]) + 0.7152 * f(c[1]) + 0.0722 * f(c[2]);
+    };
+    const contrast = (a, b) => { const A = lum(a), B = lum(b); return (Math.max(A, B) + 0.05) / (Math.min(A, B) + 0.05); };
+    const rgbStr = (c) => 'rgb(' + c[0] + ',' + c[1] + ',' + c[2] + ')';
+    let curColor = '';
+    const sampleColor = () => {
+      const t = document.elementFromPoint(x, y);
+      if (!t) return;
+      let bg = null, n = t;
+      for (; n && n.nodeType === 1; n = n.parentElement) {
+        const st = getComputedStyle(n);
+        if (n.tagName === 'IMG' || n.tagName === 'VIDEO' || n.tagName === 'CANVAS' || (st.backgroundImage && st.backgroundImage !== 'none')) break;
+        const c = parseRGB(st.backgroundColor);
+        if (c && c[3] >= 0.5) { bg = c; break; }
+      }
+      const ts = getComputedStyle(t);
+      const cands = [parseRGB(ts.getPropertyValue('--text')), parseRGB(ts.getPropertyValue('--surface'))].filter(Boolean);
+      if (!cands.length) cands.push([20, 20, 20, 1], [255, 255, 255, 1]);
+      if (!bg) {
+        /* over a photo: use the colour with the most contrast against the section
+           it sits in; the halo does the rest */
+        for (n = n && n.parentElement; n && n.nodeType === 1; n = n.parentElement) {
+          const c = parseRGB(getComputedStyle(n).backgroundColor);
+          if (c && c[3] >= 0.5) { bg = c; break; }
+        }
+      }
+      if (!bg) bg = [255, 255, 255, 1];
+      let fg = cands[0], best = -1;
+      cands.forEach((c) => { const r = contrast(c, bg); if (r > best) { best = r; fg = c; } });
+      // brand colours too close to the surface (e.g. muted mixes) → fall back to black/white
+      if (best < 2.2) fg = lum(bg) > 0.4 ? [17, 17, 17, 1] : [255, 255, 255, 1];
+      // halo = the surface itself: invisible on flat colour, an outline over photos
+      const halo = bg;
+      const col = rgbStr(fg) + '|' + rgbStr(halo);
+      if (col !== curColor) {
+        curColor = col;
+        el.style.setProperty('--cur-fg', rgbStr(fg));
+        el.style.setProperty('--cur-halo', rgbStr(halo));
+      }
+    };
+    /* keep sampling briefly after movement so hover transitions (e.g. a button
+       filling with colour) are picked up while the mouse rests on them */
+    let sampleUntil = 0;
+
+    let mouseDirty = false, scrollDirty = true;
     const onMove = (e) => {
       x = e.clientX;y = e.clientY;
+      mouseDirty = true;
+      sampleUntil = performance.now() + 450;
       const t = e.target;
       overChrome = !!(t.closest && t.closest('[data-omelette-chrome]'));
       hot = !!(t.closest && t.closest('a,button,[data-magnetic],.svc-link,.work-card,summary,input,textarea')) && !overChrome;
     };
+    const onScrollDirty = () => { scrollDirty = true; sampleUntil = performance.now() + 450; };
+
+    /* node-list cache: querySelectorAll once per DOM change, not per frame */
+    let lists = null;
+    const getLists = () => lists || (lists = {
+      mag: Array.prototype.slice.call(document.querySelectorAll('[data-magnetic]')),
+      par: Array.prototype.slice.call(document.querySelectorAll('[data-parallax]')),
+      sp: Array.prototype.slice.call(document.querySelectorAll('[data-scroll]')),
+      skew: Array.prototype.slice.call(document.querySelectorAll('[data-scroll-skew]')),
+      velo: Array.prototype.slice.call(document.querySelectorAll('[data-scroll-velo]')),
+      steps: Array.prototype.slice.call(document.querySelectorAll('.proc-step'))
+    });
+    const listMo = new MutationObserver(() => { lists = null; scrollDirty = true; });
+    listMo.observe(document.body, { childList: true, subtree: true });
     const onDown = () => {down = true;};
     const onUp = () => {down = false;};
 
     const applyMagnetic = () => {
       if (!magnetic) return;
-      const list = document.querySelectorAll('[data-magnetic]');
+      const list = getLists().mag;
       list.forEach((m) => {
         const r = m.getBoundingClientRect();
         if (!r.width) return;
@@ -85,7 +159,7 @@ function Fx({ cursor, magnetic, parallax, intensity = 50 }) {
     const applyParallax = () => {
       if (!parallax) return;
       const vh = window.innerHeight;
-      document.querySelectorAll('[data-parallax]').forEach((p) => {
+      getLists().par.forEach((p) => {
         const sp = parseFloat(p.dataset.parallax);
         if (!sp) return;
         const r = p.getBoundingClientRect();
@@ -110,25 +184,26 @@ function Fx({ cursor, magnetic, parallax, intensity = 50 }) {
       vel += (((y - lastY)) - vel) * 0.18; lastY = y;
       const skew = Math.max(-2.4, Math.min(2.4, vel * 0.05));
       const vh = window.innerHeight;
-      document.querySelectorAll('[data-scroll]').forEach((s) => {
+      const L = getLists();
+      L.sp.forEach((s) => {
         const r = s.getBoundingClientRect();
         // 0 as it enters the bottom → 1 as it leaves the top
         const p = (vh - r.top) / (vh + r.height);
         s.style.setProperty('--sp', Math.min(1, Math.max(0, p)).toFixed(3));
       });
-      document.querySelectorAll('[data-scroll-skew]').forEach((s) => {
+      L.skew.forEach((s) => {
         s.style.transform = 'skewY(' + skew.toFixed(2) + 'deg)';
       });
       // scroll-velocity reactive type: skews + vertically stretches with scroll
       // speed, settling back to rest as the velocity decays (Codrops "velocity").
       const velo = Math.max(-1, Math.min(1, vel * 0.05));
-      document.querySelectorAll('[data-scroll-velo]').forEach((s) => {
+      L.velo.forEach((s) => {
         const r = s.getBoundingClientRect();
         if (r.bottom < -240 || r.top > vh + 240) return;
         s.style.transform = 'skewY(' + (velo * 6).toFixed(2) + 'deg) scaleY(' + (1 + Math.abs(velo) * 0.16).toFixed(3) + ')';
       });
       // process steps: only the one nearest the focus line is "in focus"
-      const steps = document.querySelectorAll('.proc-step');
+      const steps = L.steps;
       if (steps.length) {
         const line = vh * 0.46;
         let best = -1, bestD = Infinity;
@@ -142,29 +217,38 @@ function Fx({ cursor, magnetic, parallax, intensity = 50 }) {
     };
 
     const loop = () => {
-      cx += (x - cx) * 0.22;cy += (y - cy) * 0.22;
-      if (useCursor && el) {
-        const s = down ? 0.7 : hot ? 1.8 : 1;
-        el.style.transform = `translate(${cx.toFixed(1)}px,${cy.toFixed(1)}px) scale(${s})`;
+      /* position follows the mouse 1:1 (no easing lag); only the size eases */
+      const ts = down ? 0.7 : hot ? 1.8 : 1;
+      const cursorSettling = Math.abs(ts - cs) > 0.005;
+      cs = cursorSettling ? cs + (ts - cs) * 0.35 : ts;
+      if (useCursor && el && (cursorSettling || mouseDirty)) {
+        el.style.transform = `translate(${x}px,${y}px) scale(${cs.toFixed(3)})`;
         el.classList.toggle('hidden', overChrome);
         if (!el.classList.contains('live')) el.classList.add('live');
       }
-      applyMagnetic();
-      applyParallax();
-      applyScroll();
+      if (useCursor && el && performance.now() < sampleUntil) sampleColor();
+      /* dirty-flagged: at rest this loop does no DOM reads or writes at all */
+      if (mouseDirty || scrollDirty) applyMagnetic();
+      if (scrollDirty) { applyParallax(); applyScroll(); }
+      mouseDirty = false; scrollDirty = false;
       raf = requestAnimationFrame(loop);
     };
 
     window.addEventListener('mousemove', onMove, { passive: true });
     window.addEventListener('mousedown', onDown);
     window.addEventListener('mouseup', onUp);
+    window.addEventListener('scroll', onScrollDirty, { passive: true });
+    window.addEventListener('resize', onScrollDirty);
     raf = requestAnimationFrame(loop);
 
     return () => {
       cancelAnimationFrame(raf);
+      listMo.disconnect();
       window.removeEventListener('mousemove', onMove);
       window.removeEventListener('mousedown', onDown);
       window.removeEventListener('mouseup', onUp);
+      window.removeEventListener('scroll', onScrollDirty);
+      window.removeEventListener('resize', onScrollDirty);
       document.body.classList.remove('cur-on');
       if (el) el.classList.remove('live');
       // clear any transforms we set
@@ -202,9 +286,14 @@ function Fx({ cursor, magnetic, parallax, intensity = 50 }) {
       });
     };
     scan();
-    const mo = new MutationObserver(() => scan());
+    /* coalesce mutation bursts (SplitText re-splits, route swaps) into one
+       scan per frame instead of one per mutation record */
+    let pend = 0;
+    const mo = new MutationObserver(() => {
+      if (!pend) pend = requestAnimationFrame(() => { pend = 0; scan(); });
+    });
     mo.observe(document.body, { childList: true, subtree: true });
-    return () => { io.disconnect(); mo.disconnect(); };
+    return () => { io.disconnect(); mo.disconnect(); if (pend) cancelAnimationFrame(pend); };
   }, []);
 
   return (
@@ -563,11 +652,18 @@ function HeroJack({ opener, children, cta }) {
       words.forEach((w) => { w.style.opacity = 1; });
       return;
     }
+    let lastReach = -1;
     const onScroll = () => {
       const total = stage.offsetHeight - window.innerHeight;
       const p = total > 0 ? Math.min(1, Math.max(0, -stage.getBoundingClientRect().top / total)) : 0;
-      const reach = Math.min(1, p / 0.82) * words.length;
-      words.forEach((w, i) => { w.style.opacity = (i < reach ? 1 : 0.16).toFixed(2); });
+      // complete the reveal at 65% of the pin so the hold releases with energy
+      const reach = Math.round(Math.min(1, p / 0.65) * words.length);
+      if (reach === lastReach) return;
+      // only touch the words in the changed range, not all ~90 every event
+      const lo = Math.min(lastReach < 0 ? 0 : lastReach, reach);
+      const hi = Math.max(lastReach < 0 ? words.length : lastReach, reach);
+      for (let i = lo; i < hi; i++) { if (words[i]) words[i].style.opacity = i < reach ? '1' : '0.16'; }
+      lastReach = reach;
     };
     window.addEventListener('scroll', onScroll, { passive: true });
     onScroll();
@@ -576,6 +672,7 @@ function HeroJack({ opener, children, cta }) {
   return (
     <div className="hero-jack" ref={stageRef}>
       <header className="band hero bigstate hero-pin" data-comment-anchor="df868533cd-header-48-7">
+        <GradientField />
         <div className="wrap">
           <p className="bigstatement" ref={paraRef}>{content}</p>
           <div className="hero-cta" style={{ marginTop: 'var(--gap-5)' }}>{cta}</div>
@@ -726,6 +823,17 @@ function IntroHero() {
 
   // loading bar fill + scroll lock
   useFxE(() => {
+    const finish = () => {
+      setPct(100);
+      setLoaded(true);
+      window.__introSeen = true;
+      try { sessionStorage.setItem('us_introSeen', '1'); } catch (e) {}
+      document.body.style.overflow = '';
+      document.body.classList.remove('intro-on');
+    };
+    // rAF never fires in a hidden tab — a loader nobody sees must not
+    // gate the page. skip instantly, and finish if the tab gets hidden.
+    if (document.hidden) { finish(); return; }
     document.body.style.overflow = 'hidden';
     window.scrollTo(0, 0);
     const dur = 700;
@@ -736,18 +844,14 @@ function IntroHero() {
       // ease-out so the bar eases into 100
       const eased = 1 - Math.pow(1 - p, 1.8);
       setPct(Math.round(eased * 100));
-      if (p < 1) {raf = requestAnimationFrame(tick);} else
-      {
-        setLoaded(true);
-        window.__introSeen = true;
-        try { sessionStorage.setItem('us_introSeen', '1'); } catch (e) {}
-        document.body.style.overflow = '';
-        document.body.classList.remove('intro-on');
-      }
+      if (p < 1) {raf = requestAnimationFrame(tick);} else finish();
     };
     raf = requestAnimationFrame(tick);
+    const onVis = () => { if (document.hidden) { cancelAnimationFrame(raf); finish(); } };
+    document.addEventListener('visibilitychange', onVis);
     return () => {
       cancelAnimationFrame(raf);
+      document.removeEventListener('visibilitychange', onVis);
       document.body.style.overflow = '';
       document.body.classList.remove('intro-on');
     };
@@ -831,12 +935,18 @@ Object.assign(window, { Plate, Fx, ZoomReveal, IntroHero });
 function MiniIntro() {
   const [phase, setPhase] = useFxS('pre'); // pre → in → out → done
   useFxE(() => {
+    // background tabs throttle timers to ~1/min — a splash nobody can see
+    // must never gate the page. skip instantly, or finish on tab-hide.
+    if (document.hidden) { setPhase('done'); return; }
     document.body.classList.add('intro-on');
     const r = requestAnimationFrame(() => setPhase('in'));
     const t1 = setTimeout(() => setPhase('out'), 1000);
     const t2 = setTimeout(() => {setPhase('done');document.body.classList.remove('intro-on');}, 1600);
+    const onVis = () => { if (document.hidden) { setPhase('done'); document.body.classList.remove('intro-on'); } };
+    document.addEventListener('visibilitychange', onVis);
     return () => {
       cancelAnimationFrame(r);clearTimeout(t1);clearTimeout(t2);
+      document.removeEventListener('visibilitychange', onVis);
       document.body.classList.remove('intro-on');
     };
   }, []);
